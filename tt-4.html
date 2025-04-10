@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Pop Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #87CEEB;
+            user-select: none; /* Prevents text selection */
+        }
+        .balloon {
+            width: 50px;
+            height: 70px;
+            background-color: pink;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -100px;
+            cursor: pointer;
+        }
+        #score, #timer {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: white;
+        }
+        #timer {
+            left: initial;
+            right: 10px;
+        }
+        #message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: white;
+            display: none; /* Hidden by default */
+        }
+        #restartButton {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 20px;
+            font-size: 20px;
+            display: none; /* Hidden by default */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Score: 0</div>
+    <div id="timer"></div>
+    <div id="message"></div>
+    <button id="restartButton">Restart Game</button>
+
+    <script>
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const messageElement = document.getElementById('message');
+        const restartButton = document.getElementById('restartButton');
+
+        let score = 0;
+        let gameTimer;
+        let spawnTimer;
+        const goal = 20; // Goal to win the game
+
+        function spawnBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+            balloon.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+            document.body.appendChild(balloon);
+            
+            balloon.addEventListener('click', () => {
+                balloon.remove(); // Pop the balloon
+                score++;
+                updateScore();
+                if (score >= goal) {
+                    endGame(true); // Win condition
+                }
+            });
+
+            let bottomPosition = -100;
+            function float() {
+                if (bottomPosition < window.innerHeight && document.body.contains(balloon)) {
+                    bottomPosition += 2;
+                    balloon.style.bottom = `${bottomPosition}px`;
+                    requestAnimationFrame(float);
+                } else {
+                    balloon.remove(); // Remove balloon if it floats off screen
+                }
+            }
+            float();
+        }
+
+        function updateScore() {
+            scoreElement.innerText = `Score: ${score}`;
+        }
+
+        function updateTimer(seconds) {
+            timerElement.innerText = `Time: ${seconds}s`;
+        }
+
+        function endGame(won) {
+            clearInterval(gameTimer);
+            clearInterval(spawnTimer);
+            document.querySelectorAll('.balloon').forEach(balloon => balloon.remove()); // Remove all balloons
+            messageElement.innerText = won ? "You won!" : "Better luck next time!";
+            messageElement.style.display = 'block'; // Show message
+            restartButton.style.display = 'block'; // Show the restart button
+        }
+
+        function startGame() {
+            score = 0;
+            let timeLeft = 30; // Game time in seconds
+
+            document.querySelectorAll('.balloon').forEach(balloon => balloon.remove()); // Clear any existing balloons
+            messageElement.style.display = 'none'; // Hide message
+            restartButton.style.display = 'none'; // Hide the restart button
+            updateScore();
+            updateTimer(timeLeft);
+
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                updateTimer(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(gameTimer);
+                    endGame(false); // Lose condition
+                }
+            }, 1000);
+
+            spawnTimer = setInterval(spawnBalloon, 800);
+        }
+
+        restartButton.addEventListener('click', startGame);
+
+        // Initially start the game
+        startGame();
+    </script>
+</body>
+</html>
+

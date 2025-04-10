@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            margin: 20px;
+        }
+
+        .card {
+            background-color: #009578;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #009578;
+            font-size: 36px;
+            cursor: pointer;
+            border-radius: 8px;
+            user-select: none;
+        }
+
+        .flip, .matched {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .score-panel {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+< /hr> 
+<h1>Memory Matching Game</h1>
+<p>Max.no of moves :15</p>
+<div class="score-panel">
+    Moves: <span id="moves">0</span>
+</div>
+<section class="game-board"></section>
+<div id="result"></div>
+
+<script>
+    const gameBoard = document.querySelector('.game-board');
+    const movesCount = document.getElementById('moves');
+    const resultDisplay = document.getElementById('result');
+    let cardArray = [];
+    let hasFlippedCard = false;
+    let lockBoard = false;
+    let firstCard, secondCard;
+    let moves = 0;
+    let matchCount = 0;
+
+    function generateRandomLetters() {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const charactersLength = characters.length;
+        for (let i = 0; i < 8; i++) {
+            const char = characters.charAt(Math.floor(Math.random() * charactersLength));
+            cardArray.push({ name: char });
+            cardArray.push({ name: char }); // Create a matching pair
+        }
+        cardArray.sort(() => 0.5 - Math.random());
+    }
+
+    function createBoard() {
+        generateRandomLetters();
+        cardArray.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.name = item.name;
+            card.dataset.id = index;
+            card.innerHTML = `<span style="opacity: 0;">${item.name}</span>`;
+            card.addEventListener('click', flipCard);
+            gameBoard.appendChild(card);
+        });
+    }
+
+    function flipCard() {
+        if (lockBoard) return;
+        if (this === firstCard) return;
+
+        this.classList.add('flip');
+        this.querySelector('span').style.opacity = 1;
+
+        if (!hasFlippedCard) {
+            hasFlippedCard = true;
+            firstCard = this;
+            return;
+        }
+
+        secondCard = this;
+        checkForMatch();
+        addMove();
+    }
+
+    function checkForMatch() {
+        const isMatch = firstCard.dataset.name === secondCard.dataset.name;
+        isMatch ? disableCards() : unflipCards();
+    }
+
+    function disableCards() {
+        firstCard.removeEventListener('click', flipCard);
+        secondCard.removeEventListener('click', flipCard);
+        matchCount += 2;
+        checkForWin();
+        resetBoard();
+    }
+
+    function unflipCards() {
+        lockBoard = true;
+        setTimeout(() => {
+            firstCard.classList.remove('flip');
+            secondCard.classList.remove('flip');
+            firstCard.querySelector('span').style.opacity = 0;
+            secondCard.querySelector('span').style.opacity = 0;
+            resetBoard();
+        }, 1500);
+    }
+
+    function addMove() {
+        moves++;
+        movesCount.innerText = moves;
+        if (moves === 15) { // Set your move limit here
+            endGame(false);
+        }
+    }
+
+    function checkForWin() {
+        if (matchCount === cardArray.length) {
+            endGame(true);
+        }
+    }
+
+    function endGame(win) {
+        let message = win ? "You nailed it!" : "Better luck next time!";
+        resultDisplay.innerHTML = `<h2>${message}</h2>`;
+        lockBoard = true; // Prevent further moves
+    }
+
+    function resetBoard() {
+        [hasFlippedCard, lockBoard] = [false, false];
+        [firstCard, secondCard] = [null, null];
+    }
+
+    createBoard();
+</script>
+</body>
+</html>

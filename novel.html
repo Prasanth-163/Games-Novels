@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Categories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .category {
+            margin-bottom: 40px;
+        }
+
+        .category h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .books {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap; 
+        }
+
+        .book {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-basis: calc(25% - 20px); 
+            text-align: center; /* Center the text for smaller items or in case of wrapping */
+        }
+        .book img {
+            max-width: 100px; /* Adjust as needed */
+            max-height: 150px; /* Adjust as needed */
+            margin-bottom: 10px; /* Add some space between the image and the link */
+            object-fit: cover; /* Ensure the aspect ratio is maintained */
+        }
+        .book a {
+            text-decoration: none;
+            color: #0077cc;
+            transition: color 0.3s ease;
+            width: 100%; /* Makes sure the link uses the full available width for better clickability */
+        }
+
+        .book a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="category">
+        <h1>Fantasy</h1>
+        <div class="books">
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=YdGjDwAAQBAJ&pg=GBS.PT1.w.0.0.1&hl=en"><img src="https://m.media-amazon.com/images/I/41uNXwz5YuL.jpg">Angelbound Origins</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=UoTvDwAAQBAJ&pg=GBS.PP1&hl=en"><img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1647879721i/60666212.jpg">Wicked Moons</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=YyKtDwAAQBAJ&pg=GBS.PT2.w.16.0.1_63&hl=en"><img src="https://m.media-amazon.com/images/I/61tR8ULLWoL._AC_UF1000,1000_QL80_.jpg">Oathbreaker</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=DKh6DwAAQBAJ&pg=GBS.PP1.w.0.0.0.3&hl=en"><img src="https://m.media-amazon.com/images/I/41NMguFzdSL.jpg">The Magic Factory</a>
+            </div>
+            
+        </div>
+    </div>
+    <hr />
+    <hr />
+    <div class="category">
+        <h1>Action and Adventure</h1>
+        <div class="books">
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=bSm1DwAAQBAJ&pg=GBS.PP1&hl=en"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYd56aKiqug6pS2-HTL7gFwWJay7SmnCzqlfVJ1D88ECEOFWf32_8C4KDbmu6GGfdeSlA&usqp=CAU">ESCAPE, A New Life</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=SR5-EAAAQBAJ&pg=GBS.PT1.w.0.0.0.1&hl=en"><img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1660002994i/61908421.jpg">Target One</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=HCxEDwAAQBAJ&pg=GBS.PP1&hl=en"><img src="https://m.media-amazon.com/images/I/91y+4GohYOL._AC_UF1000,1000_QL80_.jpg">Goliath</a>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <hr />
+    <div class="category">
+        <h1>Horror</h1>
+        <div class="books">
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=Cr_4DwAAQBAJ&hl=en"><img src="https://m.media-amazon.com/images/I/51ZOSz7qC5L.jpg">The Eyes in the Dark</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=--hIAgAAQBAJ&pg=GBS.PA2&hl=en"><img src="https://m.media-amazon.com/images/I/619+bOn+RpL._AC_UF1000,1000_QL80_.jpg">Edge of Shadows</a>
+            </div>
+            <div class="book">
+                <a href="https://play.google.com/books/reader?id=_Ra_DwAAQBAJ&pg=GBS.PP1.w.2.0.5&hl=en"><img src="https://m.media-amazon.com/images/I/71fIsTSOf6L._AC_UF1000,1000_QL80_.jpg">The Haunting of Sunshine House</a>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <hr />
+<p>--> In between the novels it may ask to signin then just signin and continue it is for free....  </p>
+<h6>NOTE :The novels which are presented here are taken from the free websites so,there is no concern of copy write issues </h6>
+</body>
+</html>

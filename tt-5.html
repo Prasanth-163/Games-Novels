@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .game-container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #history {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h2>Guess the Number!</h2>
+        <p id="message">I'm thinking of a number between 1 and 100. You have 7 chances.</p>
+        <input type="number" id="guess" placeholder="Enter your guess" min="1" max="100">
+        <button id="submitGuess">Guess</button>
+        <div id="history"></div>
+        <button id="restartGame" style="display:none;">Restart Game</button>
+    </div>
+    <script>
+        let randomNumber, attempts;
+        const messageElement = document.getElementById('message');
+        const historyElement = document.getElementById('history');
+        const guessInput = document.getElementById('guess');
+        const guessButton = document.getElementById('submitGuess');
+        const restartButton = document.getElementById('restartGame');
+
+        function initializeGame() {
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 7; // Adjusted the number of attempts to 7
+            guessButton.style.display = 'inline-block';
+            guessInput.style.display = 'inline-block';
+            restartButton.style.display = 'none';
+            messageElement.innerText = "I'm thinking of a number between 1 and 100. You have 7 chances.";
+            historyElement.innerHTML = '';
+            guessInput.value = '';
+        }
+
+        document.getElementById('submitGuess').onclick = function() {
+            let userGuess = parseInt(guessInput.value, 10);
+            if (!userGuess || userGuess < 1 || userGuess > 100) {
+                alert("Please enter a number between 1 and 100.");
+                return;
+            }
+
+            attempts--;
+            if (userGuess === randomNumber) {
+                displayMessage("Congratulations! You guessed it right!", true);
+            } else if (attempts === 0) {
+                displayMessage(`Sorry, you've run out of guesses. The number was ${randomNumber}.`, true);
+            } else {
+                let hint = userGuess < randomNumber ? "too low" : "too high";
+                displayMessage(`Your guess is ${hint}. You have ${attempts} guesses left.`);
+            }
+
+            historyElement.innerHTML += `<div>Your guess: ${userGuess}</div>`;
+            guessInput.value = ''; // Clear the input field
+        };
+
+        function displayMessage(message, gameOver=false) {
+            messageElement.innerText = message;
+            if (gameOver) {
+                guessButton.style.display = 'none';
+                guessInput.style.display = 'none';
+                restartButton.style.display = 'inline-block';
+            }
+        }
+
+        document.getElementById('restartGame').onclick = function() {
+            initializeGame(); // Restart the game without reloading the page
+        };
+
+        // Initialize the game when the page loads
+        initializeGame();
+    </script>
+</body>
+</html>

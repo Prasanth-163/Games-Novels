@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack-a-Mole!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        .game {
+            width: 320px;
+            height: 320px;
+            border: 5px solid #333;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 5px;
+            background-color: #999;
+            position: relative;
+        }
+        .mole {
+            background-color: #800;
+            border-radius: 50%;
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Whack-a-Mole!</h1>
+    <p>Score: <span id="score">0</span></p>
+    <p>Time left: <span id="timeLeft">30</span> seconds</p>
+    <div id="endGameMessage" style="display: none;">
+        <p id="endMessage"></p>
+        <button onclick="restartGame()">Restart Game</button>
+    </div>
+    <div class="game"></div>
+    <script>
+        const scoreDisplay = document.getElementById('score');
+        const timeLeftDisplay = document.getElementById('timeLeft');
+        const endGameMessage = document.getElementById('endGameMessage');
+        const endMessage = document.getElementById('endMessage');
+        const gameArea = document.querySelector('.game');
+        let score = 0;
+        let active = false;
+        let gameTimer, moleTimer;
+        let timeLeft = 30; // Game duration in seconds
+        const winScore = 10; // Score needed to win
+
+        function randomTime(min, max) {
+            return Math.round(Math.random() * (max - min) + min);
+        }
+
+        function randomSpot() {
+            const size = gameArea.getBoundingClientRect();
+            const x = randomTime(0, size.width - 60);
+            const y = randomTime(0, size.height - 60);
+            return { x, y };
+        }
+
+        function showMole() {
+            if (active || timeLeft <= 0) return;
+            active = true;
+            const mole = document.createElement('div');
+            mole.classList.add('mole');
+            const { x, y } = randomSpot();
+            mole.style.left = `${x}px`;
+            mole.style.top = `${y}px`;
+            mole.addEventListener('click', whack);
+            gameArea.appendChild(mole);
+
+            let timer = randomTime(600, 1000);
+            moleTimer = setTimeout(() => {
+                if (mole.parentNode === gameArea) {
+                    gameArea.removeChild(mole);
+                }
+                active = false;
+            }, timer);
+        }
+
+        function whack() {
+            score++;
+            scoreDisplay.textContent = score;
+            this.removeEventListener('click', whack);
+            clearTimeout(moleTimer);
+            if (this.parentNode === gameArea) {
+                gameArea.removeChild(this);
+            }
+            active = false;
+            checkWinCondition();
+        }
+
+        function checkWinCondition() {
+            if (score >= winScore) {
+                endGame(true);
+            }
+        }
+
+        function endGame(won) {
+            clearInterval(gameTimer);
+            clearTimeout(moleTimer);
+            gameArea.innerHTML = '';
+            endGameMessage.style.display = 'block';
+            endMessage.textContent = won ? "You Won! 🎉" : "Better luck next time!";
+            document.querySelector('.game').style.pointerEvents = 'none';
+        }
+
+        function restartGame() {
+            score = 0;
+            timeLeft = 30;
+            active = false;
+            scoreDisplay.textContent = score;
+            timeLeftDisplay.textContent = timeLeft;
+            endGameMessage.style.display = 'none';
+            document.querySelector('.game').style.pointerEvents = 'auto';
+            startGame();
+        }
+
+        function startGame() {
+            gameTimer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    timeLeftDisplay.textContent = timeLeft;
+                } else if (timeLeft === 0) {
+                    endGame(false);
+                }
+            }, 1000);
+
+            setInterval(showMole, 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", startGame);
+    </script>
+</body>
+</html>
